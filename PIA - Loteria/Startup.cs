@@ -1,4 +1,7 @@
-﻿namespace PIA___Loteria
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
+namespace PIA___Loteria
 {
     public class Startup
     {
@@ -11,14 +14,22 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen();
+            //Configura AplicationContext como servicio
+            services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
+       
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen( c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPILoteria", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+           
             // Configure the HTTP request pipeline.
             if (env.IsDevelopment())
             {
